@@ -22,10 +22,11 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World</h1>')
 })
 app.get("/", test.login);
-
+/*
 app.listen(port, () => {
   `Server started on port ${port}`;
 });
+*/
 
 app.use(function(req, res, next) {
   res.status(404).json({name:'API', version:'1.0', status: 404, message: 'not_found'});
