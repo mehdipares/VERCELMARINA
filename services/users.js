@@ -20,10 +20,11 @@ exports.getById = async (req, res, next) => {
 
 //ajout user 
 exports.add = async (req, res, next) => {
+
     const temp = ({
-        name    : req.body.name,
+        name     : req.body.name,
         firstname: req.body.firstname,
-        email : req.body.email,
+        email    : req.body.email,
         password : req.body.password  
     });
 
