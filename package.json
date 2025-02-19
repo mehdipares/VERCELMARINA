@@ -1,0 +1,23 @@
+{
+    "name": "express-vercel-deployment",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "env-cmd -f ./env/.env.dev nodemon ./bon/www",
+        "start": "env-cmd -f ./env/.env nodemon ./bin/www",
+        "prod": "env-cmd -f ./env/.env.prod nodemon ./bin/www"
+    },
+    "author": "Damien Boiteux",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.2",
+        "jsonwebtoken": "^9.0.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.9"
+    }
+}
