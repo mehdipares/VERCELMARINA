@@ -2,8 +2,10 @@
 const User = require('../models/user');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-require('dotenv').config();
-const SECRET_KEY = process.env.SECRET_KEY;
+require('dotenv').config({ path: '../.env' });
+const SECRET_KEY = process.env.SECRET_KEY; // Récupération correcte
+console.log("SECRET_KEY utilisé :", SECRET_KEY); // Vérification du chargement
+
 
 
 // Récupérer un utilisateur par ID
@@ -110,6 +112,11 @@ exports.authenticate = async (req, res, next) => {
 
         // Suppression sécurisée du mot de passe avant de signer le token
         const { password: _, ...userWithoutPassword } = user.toObject();
+        console.log("SECRET_KEY utilisé :", SECRET_KEY);
+        if (!SECRET_KEY) {
+            console.error("⚠️ SECRET_KEY est indéfini ! Vérifie ton fichier .env.");
+            process.exit(1); // Stoppe le serveur pour éviter des erreurs
+        }
 
         const token = jwt.sign(
             { user: userWithoutPassword }, 
