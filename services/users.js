@@ -73,7 +73,7 @@ exports.delete = async (req, res, next) => {
     const id = req.params.id 
 
     try {
-        await User.deletOne({_id: id});
+        await User.deletOne({_id: id });
 
         return res.status(204).json('delete_ok');
     } catch (error) {

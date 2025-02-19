@@ -1,13 +1,16 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
-//const test = require("./controllers/user");
 const cors = require('cors');
 const cookieparser = require('cookie-parser');
 const logger = require('morgan');
-var usersRouter = require('./routes/users');
-
 const indexRouter = require('./routes/index');
 const mongodb = require('./db/mongo');
+
+
+//routes users, catways, ect
+var usersRouter = require('./routes/users');
+
+
 
 const app = express();
 
