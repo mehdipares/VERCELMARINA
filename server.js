@@ -1,6 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
-const test = require("./controllers/user");
+//const test = require("./controllers/user");
 const cors = require('cors');
 
 const indexRouter = require('./routes/index');
@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
   res.type('text/html')
   res.send('<h1>Hello World</h1>')
 })
+
 /*
 app.get("/", test.login);
 */
