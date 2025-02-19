@@ -12,4 +12,7 @@ router.patch('/:id', service.update);
 //la route pour supprimer un utilisateur
 router.delete('/:id', service.delete);
 
+//route authentification
+router.post ('/authenticate', service.authenticate);
+
 module.exports = router;
