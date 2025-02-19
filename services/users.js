@@ -1,4 +1,4 @@
-const { name } = require('ejs');
+
 const User = require('../models/user');
 
 // Récupérer un utilisateur par ID
