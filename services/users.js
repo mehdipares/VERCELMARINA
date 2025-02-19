@@ -106,7 +106,7 @@ exports.authenticate = async (req, res, next) => {
                         expiresIn: expireIn
                     });
 
-                    res.header('Authorization', 'bearer' + token);
+                    res.header('Authorization', 'bearer ' + token);
             
                     return res.status(200).json('authenticate_succeed');
                     }
