@@ -4,6 +4,7 @@ const dotenv = require("dotenv").config();
 const cors = require('cors');
 const cookieparser = require('cookie-parser');
 const logger = require('morgan');
+var usersRouter = require('./routes/users');
 
 const indexRouter = require('./routes/index');
 const mongodb = require('./db/mongo');
@@ -24,6 +25,13 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World</h1>')
 })
 
+app.use(logger('dev'));
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieparser());
+
+app.use("/", indexRouter); 
+app.use('users', usersRouter);
 /*
 app.get("/", test.login);
 */
