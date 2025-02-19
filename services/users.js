@@ -101,7 +101,7 @@ exports.authenticate = async (req, res, next) => {
                     const token    = jwt.sign({
                         user: user
                     },
-                    SECRET_KEY,
+                    process.env.SECRET_KEY,
                     {
                         expiresIn: expireIn
                     });
