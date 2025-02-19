@@ -23,22 +23,25 @@ exports.getById = async (req, res, next) => {
 
 //ajout user 
 exports.add = async (req, res, next) => {
-
-    const temp = ({
-        name     : req.body.name,
-        firstname: req.body.firstname,
-        email    : req.body.email,
-        password : req.body.password  
-    });
-
     try {
+        // Hachage du mot de passe avant de stocker en base
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        const temp = {
+            name     : req.body.name,
+            firstname: req.body.firstname,
+            email    : req.body.email,
+            password : hashedPassword // On stocke le mot de passe haché
+        };
+
         let user = await User.create(temp);
 
-        return res.status(201).json(user);
+        return res.status(201).json({ message: "user_created", user });
     } catch (error) {
-        return res.status(501).json(error);
+        console.error("Erreur lors de la création de l'utilisateur :", error);
+        return res.status(500).json({ message: "internal_server_error", error: error.message });
     }
-}
+};
 
 
 //modif 
