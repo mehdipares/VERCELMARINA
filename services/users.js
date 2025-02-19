@@ -88,7 +88,7 @@ exports.authenticate = async (req, res, next) => {
     const { email, password } = req.body;
 
     try {
-        let user = await User.findOne({ email: email }, '-__v -createdAt -updateAt');
+        let user = await User.findOne({ email: email }, '-__v -createdAt -updatedAt');
         if (user) {
             bcrypt.compare(password, user.password, function(err, response) {
                 if(err) {
@@ -101,7 +101,7 @@ exports.authenticate = async (req, res, next) => {
                     const token    = jwt.sign({
                         user: user
                     },
-                    process.env.SECRET_KEY,
+                    SECRET_KEY,
                     {
                         expiresIn: expireIn
                     });
