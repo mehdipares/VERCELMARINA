@@ -86,14 +86,15 @@ exports.delete = async (req, res, next) => {
 
 exports.authenticate = async (req, res, next) => {
     const { email, password } = req.body;
-    console.log("Mot de passe fourni :", password);
-    console.log("Mot de passe haché stocké :", user.password);
+    
 
 
     try {
         let user = await User.findOne({ email: email }, '-__v -createdAt -updatedAt');
         if (user) {
             bcrypt.compare(password, user.password, function(err, response) {
+                console.log("Mot de passe fourni :", password);
+                console.log("Mot de passe haché stocké :", user.password);
                 if(err) {
                     throw new Error(err);
                 }
