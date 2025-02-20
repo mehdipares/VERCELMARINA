@@ -9,7 +9,8 @@ const mongodb = require('./db/mongo');
 
 //routes users, catways, ect
 var usersRouter = require('./routes/users');
-
+var catwaysRouter = require('./routes/catways');
+var reservationsRouter = require ('./routes/reservations');
 
 
 const app = express();
@@ -34,7 +35,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieparser());
 
 app.use("/", indexRouter); 
-app.use('users', usersRouter);
+app.use('/users', usersRouter);
+app.use('/catways', catwaysRouter);
+app.use('/reservations', reservationsRouter);
 /*
 app.get("/", test.login);
 */

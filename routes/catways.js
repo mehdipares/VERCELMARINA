@@ -13,6 +13,6 @@ router.post('/', private.checkJWT, service.add);
 // Modifier un catway
 router.put('/:id', private.checkJWT, service.update);
 // Supprimer un catway
-router.delete('/:id', private.checkJWT, service.delete);
+router.delete('/:id', private.checkJWT, service.remove);
 
 module.exports = router;
