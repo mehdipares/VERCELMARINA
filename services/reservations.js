@@ -20,11 +20,14 @@ const getById = async (req, res) => {
 };
 
 const add = async (req, res) => {
-    const reservation = new Reservation({
-        userId: req.body.userId,
-        catwayId: req.body.catwayId,
-        date: req.body.date
-    });
+    const { catwayNumber, clientName, boatName, startDate, endDate } = req.body;
+
+    if (!catwayNumber || !clientName || !boatName || !startDate || !endDate) {
+        return res.status(400).json({ message: "Tous les champs sont requis" });
+    }
+
+    const reservation = new Reservation({ catwayNumber, clientName, boatName, startDate, endDate });
+
     try {
         const newReservation = await reservation.save();
         res.status(201).json(newReservation);
@@ -37,8 +40,8 @@ const update = async (req, res) => {
     try {
         const updatedReservation = await Reservation.findByIdAndUpdate(
             req.params.id,
-            { date: req.body.date },
-            { new: true }
+            req.body,  // Permet de modifier n'importe quel champ envoyé
+            { new: true, runValidators: true }  // Active la validation Mongoose
         );
         if (!updatedReservation) return res.status(404).json({ message: 'Réservation non trouvée' });
         res.json(updatedReservation);
