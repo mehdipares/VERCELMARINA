@@ -11,7 +11,7 @@ router.get('/:id', private.checkJWT, service.getById);
 // Ajouter une réservation
 router.post('/', private.checkJWT, service.add);
 // Modifier une réservation
-router.put('/:id', private.checkJWT, service.update);
+router.patch('/:id', private.checkJWT, service.update);
 // Supprimer une réservation
 router.delete('/:id', private.checkJWT, service.remove);
 

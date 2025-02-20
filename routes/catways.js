@@ -4,6 +4,9 @@ const router = express.Router();
 const service = require('../services/catways');
 const private = require('../middlewares/private');
 
+//attention, pour les catways l'id correspond au numéro du catway
+
+
 // Lister tous les catways
 router.get('/', private.checkJWT, service.getAll);
 // Récupérer un catway spécifique
