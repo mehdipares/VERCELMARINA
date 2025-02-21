@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav>
+        <button onclick="history.back()">Retour</button>
+        <a href="/api-docs">Documentation API</a>
+        <button onclick="logout()">Déconnexion</button>
+    </nav>
+
+    <h1>Tableau de bord</h1>
+    <p id="user-info"></p>
+    <p id="date-today"></p>
+
+    <h2>Réservations en cours</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Date</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody id="reservations-body">
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            // Afficher la date du jour
+            document.getElementById("date-today").textContent = "Date : " + new Date().toLocaleDateString();
+
+            // Charger les réservations
+            const token = localStorage.getItem("token");
+            const resResponse = await fetch("/reservations", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            const reservations = await resResponse.json();
+
+            const tbody = document.getElementById("reservations-body");
+            reservations.forEach(res => {
+                const row = `<tr>
+                    <td>${res.id}</td>
+                    <td>${res.name}</td>
+                    <td>${res.date}</td>
+                    <td>${res.status}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        });
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>

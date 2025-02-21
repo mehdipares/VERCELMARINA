@@ -23,13 +23,9 @@ app.set('views', path.join(__dirname, './views')); // Dossier des vues
 
 // Route par défaut qui redirige vers /login
 app.get('/', (req, res) => {
-  res.redirect('/login');
-});
-
-// Route pour afficher la page de connexion
-app.get('/login', (req, res) => {
   res.render('login');
 });
+
 
 
 app.use(cors({
@@ -37,10 +33,7 @@ app.use(cors({
   origin: "*"
 }));
 
-app.get('/', (req, res) => {
-  res.type('text/html')
-  res.send('<h1>Hello World</h1>')
-})
+
 
 app.use(logger('dev'));
 app.use(express.json()); 
