@@ -13,6 +13,9 @@ var catwaysRouter = require('./routes/catways');
 var reservationsRouter = require ('./routes/reservations');
 
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // Dossier des vues
+
 const app = express();
 
 const port = process.env.PORT || 3000;

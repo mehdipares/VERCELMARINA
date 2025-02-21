@@ -18,4 +18,14 @@ router.put('/:id', private.checkJWT, service.update);
 // Supprimer un catway
 router.delete('/:id', private.checkJWT, service.remove);
 
+//ROUTE POUR AFFICHER LA VUE
+
+router.get('/view', async (req, res) => {
+    try {
+        const catways = await Catway.find();
+        res.render('catways', { catways });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 module.exports = router;
