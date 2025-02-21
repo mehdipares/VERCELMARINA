@@ -16,4 +16,8 @@ router.delete('/:id', private.checkJWT, service.delete);
 //route authentification
 router.post ('/authenticate', service.authenticate);
 
+//route vue login
+router.get('/login', (req, res) => {
+    res.render('login');
+});
 module.exports = router;
