@@ -46,7 +46,8 @@
                 <td>${catway.catwayState}</td>   
                 <td><button onclick="toggleEditForm(${catway.catwayNumber})">Modifier</button></td>
             </tr>`;
-            tbody.innerHTML += row;
+            tbody.insertAdjacentHTML("beforeend", row);
+
         });
     } else {
         console.error("Erreur lors de la récupération des catways.");

@@ -32,6 +32,14 @@ app.use(
   })
 );
 
+
+
+
+
+app.use(cookieparser());
+app.use(logger('dev'));
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: false }));
 // Route par défaut qui redirige vers /login
 app.get('/', (req, res) => {
   res.render('login');
@@ -40,13 +48,6 @@ app.get('/', (req, res) => {
 app.get('/cats', (req, res) => {
   res.render('catways');
 });
-
-
-
-app.use(cookieparser());
-app.use(logger('dev'));
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: false }));
 
 app.get('/tableaudebord', private.checkJWT, async (req, res) => {
   try {

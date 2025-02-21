@@ -4,7 +4,7 @@ const Catway = require('../models/catway');
 
 const getAll = async (req, res) => {
     try {
-        const catways = await Catway.find();
+        const catways = await Catway.find().sort({ catwayNumber: 1 }); // Tri par numéro croissant
         res.json(catways);
     } catch (err) {
         res.status(500).json({ message: err.message });
