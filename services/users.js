@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config({ path: '../.env' });
 const SECRET_KEY = process.env.SECRET_KEY; // Récupération correcte
 console.log("SECRET_KEY utilisé :", SECRET_KEY); // Vérification du chargement
+const cookieparser = require('cookie-parser');
 
 
 
@@ -123,7 +124,8 @@ exports.authenticate = async (req, res, next) => {
             SECRET_KEY, 
             { expiresIn: '24h' } // Format plus lisible
         );
-
+         // Stocker le token dans un cookie HTTP-only
+        res.cookie("token", token, { httpOnly: true, secure: false }); 
         res.header('Authorization', `Bearer ${token}`);
         return res.status(200).json({ message: 'authenticate_succeed', token });
 

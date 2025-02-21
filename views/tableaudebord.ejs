@@ -6,6 +6,7 @@
     <title>Tableau de bord</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
+<%- include('partials/header') %>
 <body>
     <nav>
         <button onclick="history.back()">Retour</button>
@@ -14,7 +15,10 @@
     </nav>
 
     <h1>Tableau de bord</h1>
-    <p id="user-info"></p>
+    <!-- Infos utilisateur -->
+    <h1>Bienvenue, <%= user.firstname %> <%= user.name %> !</h1>
+    <p>Email : <%= user.email %></p>
+    <hr />
     <p id="date-today"></p>
 
     <h2>Réservations en cours</h2>
@@ -37,16 +41,7 @@
             // Afficher la date du jour
             document.getElementById("date-today").textContent = "Date : " + new Date().toLocaleDateString();
 
-            // Récupérer l'ID utilisateur stocké après connexion
-            const userId = localStorage.getItem("userId");
-            
-            if (userId) {
-                const userResponse = await fetch(`/users/info/${userId}`);
-                if (userResponse.ok) {
-                    const user = await userResponse.json();
-                    document.getElementById("user-info").textContent = `Utilisateur : ${user.name} (${user.email})`;
-                }
-            }
+           
 
             // Charger les réservations
             const token = localStorage.getItem("token");

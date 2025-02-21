@@ -40,7 +40,8 @@
                 const response = await fetch('/users/authenticate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include' // <--- Permet l'envoi et la réception des cookies
                 });
                 
                 const data = await response.json();
