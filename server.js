@@ -6,23 +6,31 @@ const cookieparser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const mongodb = require('./db/mongo');
-
+const private = require("./middlewares/private");
+const router = express.Router();
 
 //routes users, catways, ect
 var usersRouter = require('./routes/users');
 var catwaysRouter = require('./routes/catways');
 var reservationsRouter = require ('./routes/reservations');
-
-
+const port = process.env.PORT || 3000;
 
 const app = express();
+mongodb.initClientDbConnection();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views')); // Dossier des vues
 
-const port = process.env.PORT || 3000;
+// Route par défaut qui redirige vers /login
+app.get('/', (req, res) => {
+  res.redirect('/login');
+});
 
-mongodb.initClientDbConnection();
+// Route pour afficher la page de connexion
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
 
 app.use(cors({
   exposedHeaders: ['Authorization'], 
@@ -38,6 +46,8 @@ app.use(logger('dev'));
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieparser());
+
+
 
 app.use("/", indexRouter); 
 app.use('/users', usersRouter);

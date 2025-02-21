@@ -3,7 +3,7 @@ const router = express.Router();
 
 const service = require('../services/catways');
 const private = require('../middlewares/private');
-
+const catway = require('../models/catway');
 //attention, pour les catways l'id correspond au numéro du catway
 
 

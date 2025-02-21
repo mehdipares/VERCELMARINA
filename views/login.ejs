@@ -30,47 +30,6 @@
         <p id="register-error" style="color: red;"></p>
     </div>
 
-    <script>
-        document.getElementById("login-form").addEventListener("submit", async (event) => {
-            event.preventDefault();
-            const email = document.getElementById("login-email").value;
-            const password = document.getElementById("login-password").value;
-
-            const response = await fetch("/users/authenticate", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                localStorage.setItem("token", data.token);
-                alert("Connexion réussie !");
-                window.location.href = "/catways/view";  // Rediriger après connexion
-            } else {
-                document.getElementById("login-error").textContent = data.message;
-            }
-        });
-
-        document.getElementById("register-form").addEventListener("submit", async (event) => {
-            event.preventDefault();
-            const name = document.getElementById("register-name").value;
-            const email = document.getElementById("register-email").value;
-            const password = document.getElementById("register-password").value;
-
-            const response = await fetch("/users/add", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, password })
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                alert("Inscription réussie ! Vous pouvez vous connecter.");
-            } else {
-                document.getElementById("register-error").textContent = data.message;
-            }
-        });
-    </script>
+    
 </body>
 </html>
