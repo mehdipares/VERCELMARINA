@@ -21,10 +21,11 @@
     <table border="1">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Date</th>
-                <th>Statut</th>
+                <th>catwayNumber</th>
+                <th>clientName</th>
+                <th>boatName</th>
+                <th>startDate</th>
+                <th>endDate</th>
             </tr>
         </thead>
         <tbody id="reservations-body">
@@ -36,23 +37,36 @@
             // Afficher la date du jour
             document.getElementById("date-today").textContent = "Date : " + new Date().toLocaleDateString();
 
+            // Récupérer l'ID utilisateur stocké après connexion
+            const userId = localStorage.getItem("userId");
+            
+            if (userId) {
+                const userResponse = await fetch(`/users/info/${userId}`);
+                if (userResponse.ok) {
+                    const user = await userResponse.json();
+                    document.getElementById("user-info").textContent = `Utilisateur : ${user.name} (${user.email})`;
+                }
+            }
+
             // Charger les réservations
             const token = localStorage.getItem("token");
             const resResponse = await fetch("/reservations", {
                 headers: { "Authorization": "Bearer " + token }
             });
-            const reservations = await resResponse.json();
-
-            const tbody = document.getElementById("reservations-body");
-            reservations.forEach(res => {
-                const row = `<tr>
-                    <td>${res.id}</td>
-                    <td>${res.name}</td>
-                    <td>${res.date}</td>
-                    <td>${res.status}</td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
+            if (resResponse.ok) {
+                const reservations = await resResponse.json();
+                const tbody = document.getElementById("reservations-body");
+                reservations.forEach(res => {
+                    const row = `<tr>
+                        <td>${res.catwayNumber}</td>
+                        <td>${res.clientName}</td>
+                        <td>${res.boatName}</td>
+                        <td>${res.startDate}</td>
+                        <td>${res.endDate}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            }
         });
 
         function logout() {

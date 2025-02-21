@@ -26,7 +26,9 @@ app.get('/', (req, res) => {
   res.render('login');
 });
 
-
+app.get('/tableaudebord', (req, res) => {
+  res.render('tableaudebord');
+});
 
 app.use(cors({
   exposedHeaders: ['Authorization'], 

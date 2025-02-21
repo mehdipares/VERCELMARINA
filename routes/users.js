@@ -15,9 +15,18 @@ router.delete('/:id', private.checkJWT, service.delete);
 
 //route authentification
 router.post ('/authenticate', service.authenticate);
-
-//route vue login
-router.get('/login', (req, res) => {
-    res.render('login');
+// Route pour récupérer les infos utilisateur sans vérifier le token
+router.get('/info/:id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select("name email");
+        if (!user) {
+            return res.status(404).json({ error: "Utilisateur non trouvé" });
+        }
+        res.json(user);
+    } catch (error) {
+        console.error("Erreur /users/info/:id:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
 });
+
 module.exports = router;
