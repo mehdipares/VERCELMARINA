@@ -8,20 +8,12 @@
 </head>
 <%- include('partials/header') %>
 <body>
-    <nav>
-        <button onclick="history.back()">Retour</button>
-        <a href="/api-docs">Documentation API</a>
-        <button onclick="logout()">Déconnexion</button>
-    </nav>
-
-    <h1>Tableau de bord</h1>
+    <h1>RESERVATIONS</h1>
     <!-- Infos utilisateur -->
-    <h1>Bienvenue, <%= user.firstname %> <%= user.name %> !</h1>
-    <p>Email : <%= user.email %></p>
-    <hr />
+    <hr/>
     <p id="date-today"></p>
 
-    <h2>Réservations en cours</h2>
+    <h2>Réservations</h2>
     <table border="1">
         <thead>
             <tr>
@@ -38,11 +30,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", async function() {
-            // Afficher la date du jour
-            document.getElementById("date-today").textContent = "Date : " + new Date().toLocaleDateString();
-
-           
-
             // Charger les réservations
             const token = localStorage.getItem("token");
             const resResponse = await fetch("/reservations", {

@@ -4,11 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Catways</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <style>
+        #edit-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
 </head>
 <%- include('partials/header') %>
 <body>
     <h1>Liste des Catways</h1>
+    <button onclick="showAddForm()">Ajouter un Catway</button>
+    
+    <div id="add-form" style="display: none;">
+        <h2>Ajouter un Catway</h2>
+        <form id="addCatwayForm">
+            <label for="newCatwayNumber">Numéro :</label>
+            <input type="text" id="newCatwayNumber" name="newCatwayNumber" required>
+            <label for="newCatwayType">Type :</label>
+            <input type="text" id="newCatwayType" name="newCatwayType" required>
+            <label for="newCatwayState">État :</label>
+            <input type="text" id="newCatwayState" name="newCatwayState" required>
+            <button type="submit">Ajouter</button>
+            <button type="button" onclick="hideAddForm()">Annuler</button>
+        </form>
+    </div>
+    
     <table border="1">
         <thead>
             <tr>
@@ -22,38 +61,136 @@
         </tbody>
     </table>
 
+    <div id="edit-form">
+        <h2>Modifier Catway</h2>
+        <p><strong>Numéro:</strong> <span id="displayCatwayNumber"></span></p>
+        <form id="updateCatwayForm">
+            <input type="hidden" id="catwayNumber" name="catwayNumber">
+            <label for="catwayType">Type :</label>
+            <input type="text" id="catwayType" name="catwayType" required>
+            <label for="catwayState">État :</label>
+            <input type="text" id="catwayState" name="catwayState" required>
+            <button type="submit">Enregistrer</button>
+            <button type="button" onclick="deleteCatway()">Supprimer</button>
+            <button type="button" onclick="hideEditForm()">Annuler</button>
+        </form>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", async function() {
-    // Charger les catways
-    const token = localStorage.getItem("token");
-    const catwaysResponse = await fetch("/catways", {
-        headers: { "Authorization": "Bearer " + token }
-    });
+            const token = localStorage.getItem("token");
+            const catwaysResponse = await fetch("/catways", {
+                headers: { "Authorization": "Bearer " + token }
+            });
 
-    console.log("⚡ Script chargé !");
-
-    if (catwaysResponse.ok) {
-        const catways = await catwaysResponse.json();
-        console.log("Données reçues :", catways);
-        
-        const tbody = document.getElementById("catways-body");
-        tbody.innerHTML = ""; // Nettoyer le tableau avant d'ajouter des données
-
-        catways.forEach(catway => {
-            const row = `<tr>
-                <td>${catway.catwayNumber}</td>  
-                <td>${catway.catwayType}</td>    
-                <td>${catway.catwayState}</td>   
-                <td><button onclick="toggleEditForm(${catway.catwayNumber})">Modifier</button></td>
-            </tr>`;
-            tbody.insertAdjacentHTML("beforeend", row);
-
+            if (catwaysResponse.ok) {
+                const catways = await catwaysResponse.json();
+                const tbody = document.getElementById("catways-body");
+                tbody.innerHTML = "";
+                
+                catways.forEach(catway => {
+                    const row = `<tr>
+                        <td>${catway.catwayNumber}</td>  
+                        <td>${catway.catwayType}</td>    
+                        <td>${catway.catwayState}</td>   
+                        <td><button onclick="showEditForm(${catway.catwayNumber}, '${catway.catwayType}', '${catway.catwayState}')">Modifier</button></td>
+                    </tr>`;
+                    tbody.insertAdjacentHTML("beforeend", row);
+                });
+            } else {
+                console.error("Erreur lors de la récupération des catways.");
+            }
         });
-    } else {
-        console.error("Erreur lors de la récupération des catways.");
-    }
-});
 
+        function showEditForm(catwayNumber, catwayType, catwayState) {
+            document.getElementById("displayCatwayNumber").textContent = catwayNumber;
+            document.getElementById("catwayNumber").value = catwayNumber;
+            document.getElementById("catwayType").value = catwayType;
+            document.getElementById("catwayState").value = catwayState;
+            document.getElementById("edit-form").style.display = "block";
+        }
+
+        function hideEditForm() {
+            document.getElementById("edit-form").style.display = "none";
+        }
+
+        async function deleteCatway() {
+            const token = localStorage.getItem("token");
+            const catwayNumber = document.getElementById("catwayNumber").value;
+            
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce catway ?")) {
+                const response = await fetch(`/catways/${catwayNumber}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (response.ok) {
+                    alert("Catway supprimé avec succès !");
+                    location.reload();
+                } else {
+                    alert("Erreur lors de la suppression du catway.");
+                }
+            }
+        }
+
+        document.getElementById("updateCatwayForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const token = localStorage.getItem("token");
+            const catwayNumber = document.getElementById("catwayNumber").value;
+            const catwayType = document.getElementById("catwayType").value;
+            const catwayState = document.getElementById("catwayState").value;
+            
+            const response = await fetch(`/catways/${catwayNumber}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ catwayType, catwayState })
+            });
+
+            if (response.ok) {
+                alert("Catway mis à jour avec succès !");
+                location.reload();
+            } else {
+                alert("Erreur lors de la mise à jour du catway.");
+            }
+        });
+    </script>
+    <script>
+        function showAddForm() {
+            document.getElementById("add-form").style.display = "block";
+        }
+
+        function hideAddForm() {
+            document.getElementById("add-form").style.display = "none";
+        }
+
+        document.getElementById("addCatwayForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const token = localStorage.getItem("token");
+            const catwayNumber = document.getElementById("newCatwayNumber").value;
+            const catwayType = document.getElementById("newCatwayType").value;
+            const catwayState = document.getElementById("newCatwayState").value;
+            
+            const response = await fetch("/catways", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ catwayNumber, catwayType, catwayState })
+            });
+
+            if (response.ok) {
+                alert("Catway ajouté avec succès !");
+                location.reload();
+            } else {
+                response.json().then(data => alert("Erreur: " + data.message));
+            }
+        });
     </script>
 </body>
 </html>

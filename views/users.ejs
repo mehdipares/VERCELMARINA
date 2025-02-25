@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Utilisateurs</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<%- include('partials/header') %>
+<body>
+    <h1>Liste des Utilisateurs</h1>
+    <button onclick="showAddForm()">Ajouter un Utilisateur</button>
+    
+    <div id="add-form" style="display: none;">
+        <h2>Ajouter un Utilisateur</h2>
+        <form id="addUserForm">
+            <label for="newUserName">Nom :</label>
+            <input type="text" id="newUserName" name="newUserName" required>
+            <label for="newUserFirstname">Prénom :</label>
+            <input type="text" id="newUserFirstname" name="newUserFirstname" required>
+            <label for="newUserEmail">Email :</label>
+            <input type="email" id="newUserEmail" name="newUserEmail" required>
+            <label for="newUserPassword">Mot de passe :</label>
+            <input type="password" id="newUserPassword" name="newUserPassword" required>
+            <button type="submit">Ajouter</button>
+            <button type="button" onclick="hideAddForm()">Annuler</button>
+        </form>
+    </div>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="users-body">
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const token = localStorage.getItem("token");
+            const usersResponse = await fetch("/users", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+
+            if (usersResponse.ok) {
+                const users = await usersResponse.json();
+                const tbody = document.getElementById("users-body");
+                tbody.innerHTML = "";
+                
+                users.forEach(user => {
+                    const row = `<tr>
+                        <td>${user._id}</td>  
+                        <td>${user.name}</td>    
+                        <td>${user.firstname}</td>   
+                        <td>${user.email}</td>   
+                        <td>
+                            <button onclick="deleteUser('${user._id}')">Supprimer</button>
+                        </td>
+                    </tr>`;
+                    tbody.insertAdjacentHTML("beforeend", row);
+                });
+            } else {
+                console.error("Erreur lors de la récupération des utilisateurs.");
+            }
+        });
+
+        function showAddForm() {
+            document.getElementById("add-form").style.display = "block";
+        }
+
+        function hideAddForm() {
+            document.getElementById("add-form").style.display = "none";
+        }
+
+        document.getElementById("addUserForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const token = localStorage.getItem("token");
+            const name = document.getElementById("newUserName").value;
+            const firstname = document.getElementById("newUserFirstname").value;
+            const email = document.getElementById("newUserEmail").value;
+            const password = document.getElementById("newUserPassword").value;
+            
+            const response = await fetch("/users/add", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ name, firstname, email, password })
+            });
+
+            if (response.ok) {
+                alert("Utilisateur ajouté avec succès !");
+                location.reload();
+            } else {
+                response.json().then(data => alert("Erreur: " + data.message));
+            }
+        });
+
+        async function deleteUser(userId) {
+            const token = localStorage.getItem("token");
+            if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+                const response = await fetch(`/users/${userId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (response.ok) {
+                    alert("Utilisateur supprimé avec succès !");
+                    location.reload();
+                } else {
+                    alert("Erreur lors de la suppression de l'utilisateur.");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

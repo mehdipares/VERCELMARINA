@@ -21,16 +21,11 @@ const app = express();
 
 
 mongodb.initClientDbConnection();
-
+app.use('/static', express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views')); // Dossier des vues
 // Middleware pour servir des fichiers statiques (CSS, images, etc.)
-app.use(
-  '/static',
-  express.static(path.join(__dirname, 'public'), {
-    fallthrough: false, // Génère une erreur si le fichier n'est pas trouvé
-  })
-);
+
 
 
 
@@ -47,6 +42,14 @@ app.get('/', (req, res) => {
 
 app.get('/cats', (req, res) => {
   res.render('catways');
+});
+
+app.get('/resas', (req, res) => {
+  res.render('reservations');
+});
+
+app.get('/team',(req, res) => {
+  res.render('users'); 
 });
 
 app.get('/tableaudebord', private.checkJWT, async (req, res) => {
@@ -76,19 +79,11 @@ exposedHeaders: ['Authorization'],
 origin: "*"
 }));
 
-
-
-
-
-
-
 app.use("/", indexRouter); 
 app.use('/users', usersRouter);
 app.use('/catways', catwaysRouter);
 app.use('/reservations', reservationsRouter);
-/*
-app.get("/", test.login);
-*/
+
 app.listen(port, () => {
   `Server started on port ${port}`;
 });
