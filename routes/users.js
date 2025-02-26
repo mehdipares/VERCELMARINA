@@ -12,7 +12,8 @@ router.put('/add', service.add);
 router.patch('/:id', private.checkJWT, service.update);
 //la route pour supprimer un utilisateur
 router.delete('/:id', private.checkJWT, service.delete);
-
+//recup TOUS LES USERS
+router.get('/', private.checkJWT, service.getAll);
 //route authentification
 router.post ('/authenticate', service.authenticate);
 // Route pour récupérer les infos utilisateur sans vérifier le token

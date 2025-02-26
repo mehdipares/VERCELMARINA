@@ -3,58 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord</title>
+    <title>Gestion des Réservations</title>
     <link rel="stylesheet" href="../static/css/styles.css">
+    <style>
+        #edit-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
 </head>
 <%- include('partials/header') %>
 <body>
-    <h1>RESERVATIONS</h1>
-    <!-- Infos utilisateur -->
-    <hr/>
-    <p id="date-today"></p>
-
-    <h2>Réservations</h2>
+    <h1>Liste des Réservations</h1>
+    <button onclick="showAddForm()">Ajouter une Réservation</button>
+    
+    <div id="add-form" style="display: none;">
+        <h2>Ajouter une Réservation</h2>
+        <form id="addReservationForm">
+            <label for="newCatwayNumber">Numéro :</label>
+            <input type="text" id="newCatwayNumber" name="newCatwayNumber" required>
+            <label for="newClientName">Nom du Client :</label>
+            <input type="text" id="newClientName" name="newClientName" required>
+            <label for="newBoatName">Nom du Bateau :</label>
+            <input type="text" id="newBoatName" name="newBoatName" required>
+            <label for="newStartDate">Date de Début :</label>
+            <input type="date" id="newStartDate" name="newStartDate" required>
+            <label for="newEndDate">Date de Fin :</label>
+            <input type="date" id="newEndDate" name="newEndDate" required>
+            <button type="submit">Ajouter</button>
+            <button type="button" onclick="hideAddForm()">Annuler</button>
+        </form>
+    </div>
+    
     <table border="1">
         <thead>
             <tr>
-                <th>catwayNumber</th>
-                <th>clientName</th>
-                <th>boatName</th>
-                <th>startDate</th>
-                <th>endDate</th>
+                <th>Numéro</th>
+                <th>Nom du Client</th>
+                <th>Nom du Bateau</th>
+                <th>Date de Début</th>
+                <th>Date de Fin</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody id="reservations-body">
         </tbody>
     </table>
 
+    <div id="edit-form">
+        <h2>Modifier Réservation</h2>
+        <p><strong>Numéro:</strong> <span id="displayReservationId"></span></p>
+        <form id="updateReservationForm">
+            <input type="hidden" id="reservationId" name="reservationId">
+            <label for="editCatwayNumber">Numéro :</label>
+            <input type="text" id="editCatwayNumber" name="editCatwayNumber" required>
+            <label for="editClientName">Nom du Client :</label>
+            <input type="text" id="editClientName" name="editClientName" required>
+            <label for="editBoatName">Nom du Bateau :</label>
+            <input type="text" id="editBoatName" name="editBoatName" required>
+            <label for="editStartDate">Date de Début :</label>
+            <input type="date" id="editStartDate" name="editStartDate" required>
+            <label for="editEndDate">Date de Fin :</label>
+            <input type="date" id="editEndDate" name="editEndDate" required>
+            <button type="submit">Enregistrer</button>
+            <button type="button" onclick="deleteReservation()">Supprimer</button>
+            <button type="button" onclick="hideEditForm()">Annuler</button>
+        </form>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", async function() {
-            // Charger les réservations
             const token = localStorage.getItem("token");
-            const resResponse = await fetch("/reservations", {
+            const reservationsResponse = await fetch("/reservations", {
                 headers: { "Authorization": "Bearer " + token }
             });
-            if (resResponse.ok) {
-                const reservations = await resResponse.json();
+
+            if (reservationsResponse.ok) {
+                const reservations = await reservationsResponse.json();
                 const tbody = document.getElementById("reservations-body");
-                reservations.forEach(res => {
+                tbody.innerHTML = "";
+                
+                reservations.forEach(reservation => {
                     const row = `<tr>
-                        <td>${res.catwayNumber}</td>
-                        <td>${res.clientName}</td>
-                        <td>${res.boatName}</td>
-                        <td>${res.startDate}</td>
-                        <td>${res.endDate}</td>
+                        <td>${reservation.catwayNumber}</td>  
+                        <td>${reservation.clientName}</td>    
+                        <td>${reservation.boatName}</td>   
+                        <td>${new Date(reservation.startDate).toLocaleDateString()}</td>   
+                        <td>${new Date(reservation.endDate).toLocaleDateString()}</td>   
+                        <td>
+                            <button onclick="showEditForm('${reservation._id}', ${reservation.catwayNumber}, '${reservation.clientName}', '${reservation.boatName}', '${reservation.startDate}', '${reservation.endDate}')">Modifier</button>
+                        </td>
                     </tr>`;
-                    tbody.innerHTML += row;
+                    tbody.insertAdjacentHTML("beforeend", row);
                 });
+            } else {
+                console.error("Erreur lors de la récupération des réservations.");
             }
         });
 
-        function logout() {
-            localStorage.removeItem("token");
-            window.location.href = "/";
+        function showEditForm(id, catwayNumber, clientName, boatName, startDate, endDate) {
+    document.getElementById("displayReservationId").textContent = id; // Afficher l'ID de la réservation
+    document.getElementById("reservationId").value = id; // Stocker l'ID pour l'update
+    document.getElementById("editCatwayNumber").value = catwayNumber;
+    document.getElementById("editClientName").value = clientName;
+    document.getElementById("editBoatName").value = boatName;
+    document.getElementById("editStartDate").value = startDate.split('T')[0];
+    document.getElementById("editEndDate").value = endDate.split('T')[0];
+    document.getElementById("edit-form").style.display = "block";
+}
+
+
+        function hideEditForm() {
+            document.getElementById("edit-form").style.display = "none";
         }
     </script>
+    <script>
+        async function updateReservation(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+    
+            const id = document.getElementById("reservationId").value;
+            const updatedData = {
+                catwayNumber: document.getElementById("editCatwayNumber").value,
+                clientName: document.getElementById("editClientName").value,
+                boatName: document.getElementById("editBoatName").value,
+                startDate: document.getElementById("editStartDate").value,
+                endDate: document.getElementById("editEndDate").value
+            };
+    
+            const token = localStorage.getItem("token"); // Récupération du token si besoin
+    
+            const response = await fetch(`/reservations/${id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(updatedData)
+            });
+    
+            if (response.ok) {
+                alert("Réservation mise à jour !");
+                location.reload(); // Recharge la page pour afficher la mise à jour
+            } else {
+                const errorData = await response.json();
+                alert("Erreur: " + errorData.message);
+            }
+        }
+    
+        document.getElementById("updateReservationForm").addEventListener("submit", updateReservation);
+    </script>
+
+<script>
+    async function deleteReservation() {
+        const id = document.getElementById("reservationId").value;
+        const token = localStorage.getItem("token"); // Récupération du token si nécessaire
+
+        if (!confirm("Voulez-vous vraiment supprimer cette réservation ?")) {
+            return;
+        }
+
+        const response = await fetch(`/reservations/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (response.ok) {
+            alert("Réservation supprimée !");
+            location.reload(); // Recharge la page pour afficher les modifications
+        } else {
+            const errorData = await response.json();
+            alert("Erreur: " + errorData.message);
+        }
+    }
+</script>
+    </body>
+    </html>
+    
 </body>
 </html>

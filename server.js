@@ -49,7 +49,7 @@ app.get('/resas', (req, res) => {
 });
 
 app.get('/team',(req, res) => {
-  res.render('users'); 
+  res.render('team'); 
 });
 
 app.get('/tableaudebord', private.checkJWT, async (req, res) => {

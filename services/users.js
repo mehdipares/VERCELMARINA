@@ -92,6 +92,20 @@ exports.delete = async (req, res, next) => {
     }
 }
 
+// Récupérer tous les utilisateurs
+exports.getAll = async (req, res, next) => {
+    try {
+        console.log("Route GET /users appelée"); // Vérification
+        const users = await User.find({}, '-password'); // Exclure les mots de passe
+        console.log("Utilisateurs récupérés :", users); // Vérifie si des utilisateurs sont trouvés
+
+        return res.json(users); // Retourne la liste en JSON
+    } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs :", error);
+        return res.status(500).json({ message: "Erreur serveur" });
+    }
+};
+
 exports.authenticate = async (req, res, next) => {
     const { email, password } = req.body;
 

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Utilisateurs</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<%- include('partials/header') %>
+<body>
+    <h1>Liste des Utilisateurs</h1>
+    <button onclick="showAddForm()">Ajouter un Utilisateur</button>
+    
+    <div id="add-form" style="display: none;">
+        <h2>Ajouter un Utilisateur</h2>
+        <form id="addUserForm">
+            <label for="newUserName">Nom :</label>
+            <input type="text" id="newUserName" name="newUserName" required>
+            <label for="newUserFirstname">Prénom :</label>
+            <input type="text" id="newUserFirstname" name="newUserFirstname" required>
+            <label for="newUserEmail">Email :</label>
+            <input type="email" id="newUserEmail" name="newUserEmail" required>
+            <label for="newUserPassword">Mot de passe :</label>
+            <input type="password" id="newUserPassword" name="newUserPassword" required>
+            <button type="submit">Ajouter</button>
+            <button type="button" onclick="hideAddForm()">Annuler</button>
+        </form>
+    </div>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="users-body">
+            <!-- Les utilisateurs seront insérés dynamiquement ici -->
+        </tbody>
+    </table>
+    
+    <div id="edit-form" style="display: none;">
+        <h2>Modifier Utilisateur</h2>
+        <form id="updateUserForm">
+            <input type="hidden" id="userId">
+            <label for="editUserName">Nom :</label>
+            <input type="text" id="editUserName" name="editUserName" required>
+            <label for="editUserFirstname">Prénom :</label>
+            <input type="text" id="editUserFirstname" name="editUserFirstname" required>
+            <label for="editUserEmail">Email :</label>
+            <input type="email" id="editUserEmail" name="editUserEmail" required>
+            <button type="submit">Enregistrer</button>
+            <button type="button" onclick="deleteUser()">Supprimer</button>
+            <button type="button" onclick="hideEditForm()">Annuler</button>
+        </form>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("/users")
+                .then(response => response.json())
+                .then(users => {
+                    console.log("Utilisateurs récupérés :", users);
+                    const tbody = document.getElementById("users-body");
+                    tbody.innerHTML = "";
+                    users.forEach(user => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${user.name}</td>
+                            <td>${user.firstname}</td>
+                            <td>${user.email}</td>
+                            <td>
+                                <button onclick="showEditForm('${user._id}', '${user.name}', '${user.firstname}', '${user.email}')">Modifier</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error("Erreur lors de la récupération des utilisateurs :", error));
+        });
+
+        function deleteUser() {
+            const id = document.getElementById("userId").value;
+            fetch(`/users/${id}`, {
+                method: "DELETE"
+            }).then(response => {
+                if (response.ok) {
+                    alert("Utilisateur supprimé !");
+                    location.reload();
+                } else {
+                    alert("Erreur lors de la suppression !");
+                }
+            });
+        }
+
+        function showAddForm() {
+            document.getElementById("add-form").style.display = "block";
+        }
+
+        function hideAddForm() {
+            document.getElementById("add-form").style.display = "none";
+        }
+
+        function showEditForm(id, name, firstname, email) {
+            document.getElementById("userId").value = id;
+            document.getElementById("editUserName").value = name;
+            document.getElementById("editUserFirstname").value = firstname;
+            document.getElementById("editUserEmail").value = email;
+            document.getElementById("edit-form").style.display = "block";
+        }
+
+        function hideEditForm() {
+            document.getElementById("edit-form").style.display = "none";
+        }
+    </script>
+    <script>
+        document.getElementById("addUserForm").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Empêcher le rechargement de la page
+    
+            const newUser = {
+                name: document.getElementById("newUserName").value,
+                firstname: document.getElementById("newUserFirstname").value,
+                email: document.getElementById("newUserEmail").value,
+                password: document.getElementById("newUserPassword").value
+            };
+    
+            console.log("Nouvel utilisateur envoyé :", newUser); // Vérification
+    
+            const response = await fetch("/users/add", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newUser)
+            });
+    
+            const result = await response.json();
+            console.log("Réponse serveur :", result); // Vérification de la réponse
+    
+            if (response.ok) {
+                alert("Utilisateur ajouté !");
+                location.reload();
+            } else {
+                alert("Erreur : " + result.message);
+            }
+        });
+    
+        function showAddForm() {
+            document.getElementById("add-form").style.display = "block";
+        }
+    
+        function hideAddForm() {
+            document.getElementById("add-form").style.display = "none";
+        }
+    </script>
+    
+</body>
+</html>

@@ -159,38 +159,40 @@
             }
         });
     </script>
-    <script>
-        function showAddForm() {
-            document.getElementById("add-form").style.display = "block";
-        }
-
-        function hideAddForm() {
-            document.getElementById("add-form").style.display = "none";
-        }
-
-        document.getElementById("addCatwayForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            const token = localStorage.getItem("token");
-            const catwayNumber = document.getElementById("newCatwayNumber").value;
-            const catwayType = document.getElementById("newCatwayType").value;
-            const catwayState = document.getElementById("newCatwayState").value;
-            
-            const response = await fetch("/catways", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify({ catwayNumber, catwayType, catwayState })
-            });
-
-            if (response.ok) {
-                alert("Catway ajouté avec succès !");
-                location.reload();
-            } else {
-                response.json().then(data => alert("Erreur: " + data.message));
+        <script>
+            function showAddForm() {
+                document.getElementById("add-form").style.display = "block";
+                document.getElementById("overlay").style.display = "block";
             }
-        });
-    </script>
+
+            function hideAddForm() {
+                document.getElementById("add-form").style.display = "none";
+                document.getElementById("overlay").style.display = "none";
+            }
+
+            document.getElementById("addCatwayForm").addEventListener("submit", async function(event) {
+                event.preventDefault();
+                const token = localStorage.getItem("token");
+                const catwayNumber = document.getElementById("newCatwayNumber").value;
+                const catwayType = document.getElementById("newCatwayType").value;
+                const catwayState = document.getElementById("newCatwayState").value;
+                
+                const response = await fetch("/catways", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({ catwayNumber, catwayType, catwayState })
+                });
+
+                if (response.ok) {
+                    alert("Catway ajouté avec succès !");
+                    location.reload();
+                } else {
+                    response.json().then(data => alert("Erreur: " + data.message));
+                }
+            });
+        </script>
 </body>
 </html>
