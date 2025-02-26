@@ -195,6 +195,50 @@
         }
     }
 </script>
+<script>
+    document.getElementById("addReservationForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Empêcher le rechargement de la page
+
+        const newReservation = {
+            catwayNumber: document.getElementById("newCatwayNumber").value,
+            clientName: document.getElementById("newClientName").value,
+            boatName: document.getElementById("newBoatName").value,
+            startDate: document.getElementById("newStartDate").value,
+            endDate: document.getElementById("newEndDate").value
+        };
+
+        console.log("Nouvelle réservation envoyée :", newReservation); // Vérification console
+
+        const response = await fetch("/reservations", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token") // Si l'authentification est requise
+            },
+            body: JSON.stringify(newReservation)
+        });
+
+        const result = await response.json();
+        console.log("Réponse serveur :", result); // Vérification
+
+        if (response.ok) {
+            alert("Réservation ajoutée !");
+            location.reload();
+        } else {
+            alert("Erreur : " + result.message);
+        }
+    });
+</script>
+<script>
+    function showAddForm() {
+        document.getElementById("add-form").style.display = "block"; // Affiche le formulaire
+    }
+
+    function hideAddForm() {
+        document.getElementById("add-form").style.display = "none"; // Cache le formulaire
+    }
+</script>
+
     </body>
     </html>
     

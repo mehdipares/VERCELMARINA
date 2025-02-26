@@ -153,6 +153,36 @@
             document.getElementById("add-form").style.display = "none";
         }
     </script>
+    <script>
+        document.getElementById("updateUserForm").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Empêcher le rechargement de la page
+    
+            const id = document.getElementById("userId").value;
+            const updatedUser = {
+                name: document.getElementById("editUserName").value,
+                firstname: document.getElementById("editUserFirstname").value,
+                email: document.getElementById("editUserEmail").value
+            };
+    
+            console.log("Utilisateur modifié envoyé :", updatedUser); // Vérification
+    
+            const response = await fetch(`/users/${id}`, {
+                method: "PATCH", // Utilisation de PATCH pour la modification
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedUser)
+            });
+    
+            const result = await response.json();
+            console.log("Réponse serveur :", result); // Vérification de la réponse
+    
+            if (response.ok) {
+                alert("Utilisateur mis à jour !");
+                location.reload();
+            } else {
+                alert("Erreur : " + result.message);
+            }
+        });
+    </script>
     
 </body>
 </html>
