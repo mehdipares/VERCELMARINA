@@ -40,6 +40,9 @@ app.get('/', (req, res) => {
   res.render('login');
 });
 
+app.get('/login', (req, res) => {
+  res.render('login'); // Affiche login.ejs
+});
 
 app.get('/cats', (req, res) => {
   res.render('catways');
@@ -63,14 +66,14 @@ app.get('/tableaudebord', private.checkJWT, async (req, res) => {
       const user = await User.findById(userId);
       if (!user) {
           console.log("❌ Utilisateur non trouvé !");
-          return res.redirect('/login');
+          return res.redirect('login');
       }
 
       // Rendre la page du tableau de bord avec les infos utilisateur
       res.render('tableaudebord', { user });
   } catch (error) {
       console.error("🚨 Erreur récupération utilisateur:", error.message);
-      res.redirect('/login');
+      res.redirect('login');
   }
 });
 
@@ -79,6 +82,13 @@ app.use(cors({
 exposedHeaders: ['Authorization'], 
 origin: "*"
 }));
+
+// Route pour gérer la déconnexion
+app.get('/logout', (req, res) => {
+  res.clearCookie('token'); // Suppression du token des cookies
+  console.log("👋 Utilisateur déconnecté, token supprimé");
+  res.redirect('/login'); // Redirection vers la page de login
+});
 
 app.use("/", indexRouter); 
 app.use('/users', usersRouter);

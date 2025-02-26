@@ -10,15 +10,16 @@
 <body>
     
     <div class="titreboard">
+        <h1>Tableau de bord</h1>
         <nav class="navboard">
             <button onclick="history.back()">Retour</button>
             <a href="/api-docs">Documentation API</a>
             <button onclick="logout()">Déconnexion</button>
         </nav>
 
-        <h1>Tableau de bord</h1>
+        
         <!-- Infos utilisateur -->
-        <h1>Bienvenue, <%= user.firstname %> <%= user.name %> !</h1>
+        <p>Bienvenue, <%= user.firstname %> <%= user.name %> !<p>
         <p>Email : <%= user.email %></p>
         
         <p id="date-today"></p>
@@ -27,7 +28,7 @@
  
 
     <h2 class="titre">Réservations en cours</h2>
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>catwayNumber</th>
@@ -72,6 +73,17 @@
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "/";
+        }
+    </script>
+    <script>
+        function logout() {
+            fetch('/logout', { method: 'GET' })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url; // Redirige vers /login
+                    }
+                })
+                .catch(error => console.error("Erreur lors de la déconnexion :", error));
         }
     </script>
     <%- include('partials/footer') %>

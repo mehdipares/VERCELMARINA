@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion / Inscription</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
-</head>
-<%- include('partials/header') %>
-<body>
-    <h1>Connexion / Inscription</h1>
-
-    <div>
-        <h2>Connexion</h2>
-        <form id="login-form">
-            <input type="email" id="login-email" placeholder="Email" required>
-            <input type="password" id="login-password" placeholder="Mot de passe" required>
-            <button type="submit">Se connecter</button>
-        </form>
-        <p id="login-error" style="color: red;"></p>
-    </div>
-
-    <div>
-        <h2>Inscription</h2>
-        <form id="register-form">
-            <input type="text" id="register-name" placeholder="Nom" required>
-            <input type="email" id="register-email" placeholder="Email" required>
-            <input type="password" id="register-password" placeholder="Mot de passe" required>
-            <button type="submit">S'inscrire</button>
-        </form>
-        <p id="register-error" style="color: red;"></p>
-    </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Connexion / Inscription</title>
+        <link rel="stylesheet" href="../static/css/styles.css">
+    </head>
+    
+    <body class="login-page">
+        <div class="login-container">
+            <h1 class="login-title">Connexion / Inscription</h1>
+    
+            <div class="login-section">
+                <h2>Connexion</h2>
+                <form id="login-form" class="login-form">
+                    <input type="email" id="login-email" class="login-input" placeholder="Email" required>
+                    <input type="password" id="login-password" class="login-input" placeholder="Mot de passe" required>
+                    <button type="submit" class="login-button">Se connecter</button>
+                </form>
+                <p id="login-error" class="error-message"></p>
+            </div>
+    
+            <div class="login-section">
+                <h2>Inscription</h2>
+                <form id="register-form" class="register-form">
+                    <input type="text" id="register-name" class="register-input" placeholder="Nom" required>
+                    <input type="text" id="register-firstname" class="register-input" placeholder="Prénom" required>
+                    <input type="email" id="register-email" class="register-input" placeholder="Email" required>
+                    <input type="password" id="register-password" class="register-input" placeholder="Mot de passe" required>
+                    <button type="submit" class="register-button">S'inscrire</button>
+                </form>
+                <p id="register-error" class="error-message"></p>
+            </div>
+        </div>
 
     <script>
         document.getElementById('login-form').addEventListener('submit', async function(event) {
@@ -54,6 +57,33 @@
                 }
             } catch (error) {
                 document.getElementById('login-error').textContent = 'Erreur serveur';
+            }
+        });
+    </script>
+     <script>
+        document.getElementById('register-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const firstname = document.getElementById('register-firstname').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            try {
+                const response = await fetch('/users/add', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, firstname, email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert("Inscription réussie ! Connectez-vous.");
+                    window.location.href = '/login';
+                } else {
+                    document.getElementById('register-error').textContent = data.error || "Échec de l'inscription";
+                }
+            } catch (error) {
+                document.getElementById('register-error').textContent = 'Erreur serveur';
             }
         });
     </script>

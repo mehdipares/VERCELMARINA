@@ -18,24 +18,15 @@ exports.checkJWT = async (req, res, next) => {
         jwt.verify(token, SECRET_KEY, (err, decoded) => {
             if (err) {
                 console.log("🚨 Erreur JWT :", err.message);
-                return res.status(401).json('token_not_valid');
+                return res.redirect('../views/login.ejs'); // Redirection vers login si token invalide
             } else {
                 console.log("✅ Token décodé :", decoded);
-                
                 req.decoded = decoded; // Stocker les infos du token
-
-                // Regénération du token (optionnel)
-                const expiresIn = 24 * 60 * 60;
-                const newToken = jwt.sign({ user: decoded.user }, SECRET_KEY, { expiresIn: expiresIn });
-
-                console.log("🔄 Nouveau token généré :", newToken);
-                res.header('Authorization', 'Bearer ' + newToken);
-
-                next(); // Passer à la suite
+                next();
             }
         });
     } else {
-        console.log("❌ Aucun token fourni !");
-        return res.status(401).json('token_required');
+        console.log("🚫 Aucun token trouvé, redirection vers login");
+        return res.redirect('/login');
     }
 };
