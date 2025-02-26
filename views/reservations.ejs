@@ -5,35 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Réservations</title>
     <link rel="stylesheet" href="../static/css/styles.css">
-    <style>
-        #edit-form {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-    </style>
 </head>
 <%- include('partials/header') %>
 <body>
-    <h1>Liste des Réservations</h1>
-    <button onclick="showAddForm()">Ajouter une Réservation</button>
-    
+    <div class="titre">
+        <h1>Liste des Réservations</h1>
+        <button class="btn-add" onclick="showAddForm()">Ajouter une Réservation</button>
+    </div>
     <div id="add-form" style="display: none;">
         <h2>Ajouter une Réservation</h2>
         <form id="addReservationForm">
@@ -243,4 +221,5 @@
     </html>
     
 </body>
+<%- include('partials/footer') %>
 </html>

@@ -8,8 +8,11 @@
 </head>
 <%- include('partials/header') %>
 <body>
-    <h1>Liste des Utilisateurs</h1>
-    <button onclick="showAddForm()">Ajouter un Utilisateur</button>
+    <div class="titre">
+        <h1>Liste des Utilisateurs</h1>
+        <button class="btn-add" onclick="showAddForm()">Ajouter un Utilisateur</button>
+    </div>
+
     
     <div id="add-form" style="display: none;">
         <h2>Ajouter un Utilisateur</h2>
@@ -183,6 +186,6 @@
             }
         });
     </script>
-    
+    <%- include('partials/footer') %>
 </body>
 </html>

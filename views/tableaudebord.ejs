@@ -8,20 +8,25 @@
 </head>
 <%- include('partials/header') %>
 <body>
-    <nav>
-        <button onclick="history.back()">Retour</button>
-        <a href="/api-docs">Documentation API</a>
-        <button onclick="logout()">Déconnexion</button>
-    </nav>
+    
+    <div class="titreboard">
+        <nav class="navboard">
+            <button onclick="history.back()">Retour</button>
+            <a href="/api-docs">Documentation API</a>
+            <button onclick="logout()">Déconnexion</button>
+        </nav>
 
-    <h1>Tableau de bord</h1>
-    <!-- Infos utilisateur -->
-    <h1>Bienvenue, <%= user.firstname %> <%= user.name %> !</h1>
-    <p>Email : <%= user.email %></p>
-    <hr />
-    <p id="date-today"></p>
+        <h1>Tableau de bord</h1>
+        <!-- Infos utilisateur -->
+        <h1>Bienvenue, <%= user.firstname %> <%= user.name %> !</h1>
+        <p>Email : <%= user.email %></p>
+        
+        <p id="date-today"></p>
+        
+    </div>
+ 
 
-    <h2>Réservations en cours</h2>
+    <h2 class="titre">Réservations en cours</h2>
     <table border="1">
         <thead>
             <tr>
@@ -69,5 +74,6 @@
             window.location.href = "/";
         }
     </script>
+    <%- include('partials/footer') %>
 </body>
 </html>
