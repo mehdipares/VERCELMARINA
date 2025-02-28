@@ -10,7 +10,7 @@ const private = require("./middlewares/private");
 const router = express.Router();
 const User = require('./models/user')
 
-
+                      //LAPPLICATION FONCTIONNE AVEC, LES ROUTES DEFINIES DANS LE DOSSIER ROUTE. CES ROUTES IMPORTE DES MIDDLEWARE DU DOSSIER SERVICES, SUIVEZ CETTE LOGIQUE.
 //routes users, catways, ect
 var usersRouter = require('./routes/users');
 var catwaysRouter = require('./routes/catways');
