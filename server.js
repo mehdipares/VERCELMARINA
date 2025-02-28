@@ -35,6 +35,9 @@ app.use(cookieparser());
 app.use(logger('dev'));
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
+
+
+                                                              //routes NAVIGATION HEADER
 // Route par défaut qui redirige vers /login
 app.get('/', (req, res) => {
   res.render('login');
@@ -78,6 +81,8 @@ app.get('/tableaudebord', private.checkJWT, async (req, res) => {
 });
 
 
+                                                     //gestion des cookies
+
 app.use(cors({
 exposedHeaders: ['Authorization'], 
 origin: "*"
@@ -89,6 +94,8 @@ app.get('/logout', (req, res) => {
   console.log("👋 Utilisateur déconnecté, token supprimé");
   res.redirect('/login'); // Redirection vers la page de login
 });
+
+                                              //définition des fichiers contenant les routes 
 
 app.use("/", indexRouter); 
 app.use('/users', usersRouter);

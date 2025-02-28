@@ -1,7 +1,7 @@
 const express = require('express');
 
 const Catway = require('../models/catway');
-
+//function get all catways
 const getAll = async (req, res) => {
     try {
         const catways = await Catway.find().sort({ catwayNumber: 1 }); // Tri par numéro croissant
@@ -11,6 +11,7 @@ const getAll = async (req, res) => {
     }
 };
 
+//function, get by id ()
 const getById = async (req, res) => {
     try {
         const catway = await Catway.findOne({ catwayNumber: req.params.id });
@@ -20,6 +21,7 @@ const getById = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+//function d'ajout catways
 
 const add = async (req, res) => {
     const catway = new Catway({
@@ -35,6 +37,7 @@ const add = async (req, res) => {
     }
 };
 
+//function qui permet la modif des donnée sur un catway by id
 const update = async (req, res) => {
     try {
         const updatedCatway = await Catway.findOneAndUpdate(
@@ -49,6 +52,7 @@ const update = async (req, res) => {
     }
 };
 
+//function pour delete un catways
 const remove = async (req, res) => {
     try {
         const deletedCatway = await Catway.findOneAndDelete({ catwayNumber: req.params.id });

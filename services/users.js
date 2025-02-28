@@ -106,6 +106,7 @@ exports.getAll = async (req, res, next) => {
     }
 };
 
+//call back pour lauthentificatioh 
 exports.authenticate = async (req, res, next) => {
     const { email, password } = req.body;
 

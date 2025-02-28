@@ -1,5 +1,5 @@
 const Reservation = require('../models/reservation');
-
+//function pour lister l'ensemble des résas
 const getAll = async (req, res) => {
     try {
         const reservations = await Reservation.find();
@@ -8,6 +8,8 @@ const getAll = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+//function pour avoir une résas avec son
 
 const getById = async (req, res) => {
     try {
@@ -18,7 +20,7 @@ const getById = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
-
+//function pour ajouter un résevartion 
 const add = async (req, res) => {
     const { catwayNumber, clientName, boatName, startDate, endDate } = req.body;
 
@@ -35,7 +37,7 @@ const add = async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 };
-
+//function pour modif une résas
 const update = async (req, res) => {
     try {
         const updatedReservation = await Reservation.findByIdAndUpdate(
@@ -50,6 +52,7 @@ const update = async (req, res) => {
     }
 };
 
+//function pour supp un résas
 const remove = async (req, res) => {
     try {
         const deletedReservation = await Reservation.findByIdAndDelete(req.params.id);
