@@ -266,3 +266,35 @@ footer {
     color: red;
     font-size: 14px;
 }
+
+/* Style pour la présentation sur la page de connexion */
+.login-presentation {
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.login-presentation h2 {
+    color: #2c3e50;
+    font-size: 1.5em;
+}
+
+.login-presentation p {
+    font-size: 1em;
+    color: #555;
+}
+
+.login-presentation ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.login-presentation ul li {
+    font-size: 1em;
+    color: #27ae60;
+    margin: 5px 0;
+    font-weight: bold;
+}
